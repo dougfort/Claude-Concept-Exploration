@@ -1,103 +1,170 @@
-# Stage 1: The intuition, quick wit and economy of thought
+# What Is Intelligence? — Outline
 
-I've recorded your steering in _intelligence-outline.md_. Stage 1 follows. It's selective prehistory, with the brain half and the machine half at equal weight. There are five roots, and each one turns out to be ancestor to one of Grant's claims or to one part of the working claim.
+_Working plan for the thirteenth exploration, November 2026. Prompted by 3Blue1Brown, "This algorithm changed how I think about compression" (Information theory, part 3, 17 November 2026), chapter 6, "Reflections on 'Compression is Intelligence'" (transcript supplied by Fog). Drafted 2026-11-19; arc settled before stage 1._
 
-## 1.1 Aristotle: intelligence as a speed
+**Steering (2026-11-19, before drafting):** a full genealogy, not an extension of _compression-is-prediction.md_; the brain as predictive compressor at **equal weight** with machines throughout, not one stage.
 
-Aristotle has two words where we have one. _Nous_ is the grasp of first principles, a standing capacity. _Anchinoia_, "quick wit," gets one sentence near the end of the _Posterior Analytics_ (I.34). It is the ability to hit on the middle term instantly, meaning the term that explains why something holds. His example: someone notices that the moon's bright side always faces the sun and grasps the cause at once, namely that the moon borrows its light. Moving straight from the observation to the explanation is the talent.
+**Steering (2026-11-19, before stage 1):** selective prehistory in stage 1; **all three side files** (predictive coding and the free-energy principle; universal intelligence and AIXI; measuring intelligence: _g_ and factor analysis); psychometrics limited to what _g_ is as a construct, group-difference debates out of scope entirely; the free-energy principle stated **in operational terms only**, no philosophical debate.
 
-**Position:** the first definition of intelligence in the Western record is a rate, not a stock: how quickly you find the explanation, not how much you know. _Nous_ is the level, _anchinoia_ the rate, and Aristotle kept them apart. The working claim merges them, and the opening bet sides with _anchinoia_.
+**Steering (2026-11-20, after stage 1):** stage 2 as two strands of equal length (machines and tests; brains and perception); Searle kept at one paragraph.
 
-Hobbes (1651) said reasoning is reckoning, and Leibniz dreamed of settling disputes by calculation. Both are covered in _what-is-computation.md_ §1. They matter here only for the assumption that thinking is something you can do by mechanical steps.
+**Steering (2026-11-20, after stage 2):** stage 3 split 3a (brains) / 3b (machines); _residual.py_ run on a **synthetic line** with edges, ramps and noise (no real image); the Hinton–van Camp bits-back argument **stated** in 3a, with the working left to _predictive-coding-and-free-energy.md_.
 
-## 1.2 Mach: understanding as compression, 1865 and 1882
+**Steering (2026-11-21, after 3a):** Fog asked for a fuller explanation of free energy before 3b; given as a stage-3a addendum (shadow-or-puddle example, _freeenergy.py_) and, at Fog's request ("this form has been very helpful"), saved as a **fourth side file**, _free-energy-in-plain-terms.md_. For 3b: build a small **C-test** in pure Python (_ctest.py_); give **Chollet a full section**.
 
-Ernst Mach supplies both halves of the exploration, decades apart.
+***
 
-**The brain half (1865).** Mach reported that where a smooth ramp of brightness meets a flat field, people see a bright or dark stripe that isn't in the light: the Mach bands. The visual system exaggerates edges. Stage 3a will show that this is what a predictive code does. Here is the idea on one line of a photograph, the example we'll carry through the exploration:
+## 0. Carried in
 
-```
-pixels:              100  102  103  103  105  180  182  181
-predict "same as
-previous"; residual:  —   +2   +1    0   +2  +75   +2   −1
-```
+_Cite, don't repeat._
 
-Raw, that's 8 pixels × 8 bits = **64 bits**. Now send the first pixel in full, then only the residuals. Use a 1-bit flag plus 3 bits for small residuals (−4 to +3), and the flag plus 8 bits otherwise. That's 8 + (6 × 4) + (1 × 9) = **41 bits**. The only expensive residual sits at the edge. A code that sends what the prediction got wrong mostly sends the edges. A retina does something closely related: it compares each point with its neighbours on both sides, so it signals where the slope changes, which is exactly where Mach saw his bands. That's the standard textbook account. Stage 3a will check how far it holds, and _residual.py_ will run it.
+* **The identity** (_compression-is-prediction.md_ §1–3): log loss = code length; arithmetic coding turns any predictor into a compressor; Grant's chapters 1–5 match §2–5.
+* **Prequential coding** (_compression-is-prediction.md_ §5; Blier–Ollivier 2018): send no model; the decoder refits as it decodes; the training curve is the code length.
+* **Where the identity stops** (_compression-is-prediction.md_ §7): compressible ≠ efficiently predictable; compression ≠ mechanism; prediction ≠ intervention.
+* **The bias** (_what-is-induction.md_; _solomonoff-and-the-universal-prior.md_): "short" is relative to a reference machine, up to a translation constant; every learner brings an assumption the data don't supply.
+* **World model vs. lookup** (_what-is-induction.md_ §6): a learner builds a map where the map is the shortest description of its data.
+* **Emergence** (_what-is-emergence.md_): capabilities appear through first-order transitions in training, sudden per run, smooth on average.
 
-**The machine half (1882).** In his lecture "The Economical Nature of Physical Inquiry," and again in _Die Mechanik_ (1883), Mach argued that science is economy of thought. A law is a way of not having to remember the cases. His own example was refraction. Instead of tables of how much light bends at every angle, you keep one rule:
+### Grant's three claims, as stated
 
-* **The table:** angles of incidence 0° to 89° in steps of 1°, each with its refraction angle to 0.1°. That's 90 numbers at about 10 bits each, roughly **900 bits**.
-* **The law:** sin(incidence) = n × sin(refraction), with n = 1.33 for water. That's one constant at about 10 bits, plus the rule.
+1. Compression and prediction are equivalent (arithmetic coding one way; 2^−δ from a compressor the other), and good prediction seems to need a coherent model; predictive processing says the brain does this.
+2. Understanding is a thing getting smaller: equal prediction from a smaller model is better, and the Hutter Prize's count of the decoder makes that measurable.
+3. Learning quickly is intelligence too, and it enters the score when the model adapts on the fly (prequential coding from a shared pseudo-random start).
 
-Check it on two angles:
+Grant's frame: treat "compression is intelligence" as a proposed _definition_, judged like Newton's "energy" — reductive, but is it productive, does it unify? (Correction: the quantity he gives, kg·m/s², is force; energy was not Newton's. Its real history — Leibniz's _vis viva_, Young's naming in 1807, the conservation law of the 1840s — is itself a successful concept genealogy, and the better model for his test.)
 
-* 30° in: sin 30° = 0.5, and 0.5 / 1.33 = 0.376, so the ray leaves at **22.1°**.
-* 60° in: sin 60° = 0.866, and 0.866 / 1.33 = 0.651, so it leaves at **40.6°**.
+***
 
-The law also gives angles nobody measured, and changing one number (n = 1.5) covers glass. The compression generalizes. Grant's "understanding is something becoming smaller in my mind" is Mach's position nearly word for word.
+## Working claim to be broken
 
-**The twist.** Mach used economy of thought to argue against atoms. He thought positing unseen entities added to the description, so a scientist should treat atoms as a convenience at most. Boltzmann fought him over this for years. Within a few years of Boltzmann's death in 1906, Perrin had measured Avogadro's number by more than ten independent methods and found they agreed.
+**Intelligence is compression: a system is intelligent to the degree that it finds short descriptions of its experience, and one measure ranks brains and machines alike.**
 
-**Position (not claimed as new):** Mach's measure was right and his bookkeeping was wrong. In two-part code terms (_compression-is-prediction.md_ §5), the atomic hypothesis costs something once, as part of the model. It then shortens an enormous amount of data: chemistry's fixed combining proportions, the gas laws, specific heats, Brownian motion. Mach charged for the model and never credited the savings. That also settles a tension inside Grant's argument. His first claim says good prediction needs "a coherent model of what's going on"; his second says smaller is better. Mach thought those conflicted. They don't: once the data are rich enough, a model of what's really going on is what the shortest description looks like.
+Expected breaks:
 
-## 1.3 Helmholtz: perception as inference, 1867
+1. **"Short" has no owner-free meaning.** Short in whose language? (Carried in from _Induction_: the reference machine, grue, the invariance constant.) A brain's language is fixed by evolution and a metabolic budget; a transformer's by architecture and gradient descent.
+2. **Compression scores passive observation; intelligence acts.** A compressor can't choose what to look at next. AIXI must add reward; the free-energy principle must add expected free energy. Whether action can be folded into prediction is the central test for the brain half.
+3. **Compression ignores cost.** Kolmogorov complexity is free to compute forever; brains and machines are not. Levin's Kt, the speed prior, logical depth, and the energy cost of a spike all reintroduce time and energy, and the measure changes when they do.
+4. **"One measure for all" may fail.** Spearman's _g_ is a statistical construct across humans; Moravec's paradox says the ranking of tasks inverts between humans and machines.
 
-Helmholtz published the energy-conservation paper of 1847, so he's one of the real authors of the concept Grant used as his analogy. Twenty years later, in volume 3 of the _Handbook of Physiological Optics_ (1867), he proposed that perception is unconscious inference. Sensations are signs, not pictures. The mind infers from the signs to their most likely cause, without knowing it is doing so.
+## Opening bet, to be tested, not a result
 
-His standard example: press gently on the outer side of a closed eye, and you see a spot of light on the opposite side of your visual field. The pressure stimulates the retina in a spot that normally receives light from that opposite direction. Your brain infers the usual cause, even though you know the real one. The inference is fast, automatic, and can't be overridden by knowledge.
+**Intelligence is not compression but the efficiency of compressing new data: how quickly a system's prequential code length drops on experience it hasn't seen, per sample and per unit of resource, in service of acting.**
 
-This is the ancestor of predictive processing, which Grant summarizes as the brain sending predictions down and only errors up. Helmholtz said nothing about economy. His point was that a perceiver models the causes behind the signals, which is what Mach declined to do.
+Predictions:
 
-**Position:** Mach and Helmholtz split the idea between them. Mach had the measure (shortness) without the hidden causes. Helmholtz had the hidden causes without the measure. Predictive coding is Helmholtz's picture, inference to causes, scored by Mach's measure, bits saved. That merger doesn't happen until Barlow and Attneave in the 1950s, which is why stage 3a starts there.
+* Grant's claims 2 and 3 collapse into one: in a prequential code a big model is not penalized for its size but for how slowly it learns, so "smaller" is a proxy for "learns faster" (Blier–Ollivier's finding, applied to his framing; not new).
+* The brain half confirms efficient and predictive coding at the sensory periphery (retina, early vision) and is much weaker as a total theory of cortex; the 2025–26 search decides how weak.
+* Action breaks pure compression in both halves, and the repairs (AIXI's reward, active inference's expected free energy, Schmidhuber's compression progress) each smuggle in a goal or a prior.
+* Chollet's "skill-acquisition efficiency" and Grant's on-the-fly fine-tuning are the same proposal; test-time training on ARC is its experiment.
 
-## 1.4 Spearman and Binet: one number or many?
+***
 
-In 1904 Charles Spearman looked at schoolchildren's marks in classics, French, English and mathematics, alongside tests such as pitch discrimination. He found that every pair of scores correlated positively, with no negatives. He explained the pattern with one general factor, _g_, plus a specific factor for each test.
+## 1. The intuition — quick wit and economy of thought _(written 2026-11-19)_
 
-Spearman's _g_ is itself a compression, of data about people rather than data from the world. Suppose three tests have loadings 0.9, 0.8 and 0.7 on _g_. A loading is how strongly a test tracks the general factor, and the one-factor model predicts each correlation as the product of two loadings:
+_Selective prehistory._
 
-| Pair          | Predicted correlation |
-| ------------- | --------------------- |
-| tests 1 and 2 | 0.9 × 0.8 = 0.72      |
-| tests 1 and 3 | 0.9 × 0.7 = 0.63      |
-| tests 2 and 3 | 0.8 × 0.7 = 0.56      |
+* **Aristotle**: _anchinoia_, "quick wit," hitting on the middle term in an imperceptible time (_Posterior Analytics_ I.34), with his own example of the moon's bright side: intelligence as speed of finding the explanation.
+* **Hobbes** and **Leibniz** in a line; link _what-is-computation.md_ §1.
+* **Mach**: Mach bands (1865) and the economy of thought (1882 lecture; _Die Mechanik_, 1883), with his refraction example (a table of angles against Snell's law); his use of economy against atoms.
+* **Helmholtz's unconscious inference** (_Physiological Optics_, vol. 3, 1867): perception as inference from signs to causes; the pressed-eyeball phosphene.
+* **Spearman's _g_** (1904) against **Binet's** refusal of a single quantity (1905): in a paragraph; the side file carries the rest.
+* **Turing** (1950): replace the definition with a test; the "child machine" as learning.
+* Working example to carry: one line of a photograph, raw (64 bits) against residual coding (41 bits).
 
-With three tests, three loadings reproduce three correlations, so nothing is saved. With ten tests, ten loadings reproduce **45** correlations, if the model fits. The first measurement of intelligence was a short description of a correlation table.
+## 2. The dispute — what is being measured, and is it inside? _(written 2026-11-20)_
 
-A year later Alfred Binet and Théodore Simon built their scale of 30 graded tasks to find children who needed extra help at school. Binet explicitly refused to treat intelligence as a single quantity like height. So the "one measure" in the working claim was disputed from the beginning.
+_Two strands at equal length._
 
-**Position:** _g_ is a fact about a correlation table, the fact that all the correlations are positive. Whether it is also a single thing inside the head is a separate question, and that question is stage 2's dispute. The side file _measuring-intelligence.md_ will carry the factor analysis and Thomson's demonstration (1916) that many small independent "bonds" produce the same table with no single factor.
+**Machines and tests.**
 
-## 1.5 Turing: replace the definition with a test, 1950
+* _g_ real or artefact: Spearman against Thomson's bonds (1916), worked on six bonds; Thurstone's primary abilities (1938); van der Maas's mutualism (2006) as a third mechanism for the same table. Boring (1923): "intelligence is what the tests test." Construct only; side file _measuring-intelligence.md_ carries the factor analysis.
+* Turing's behaviourism and Lady Lovelace's objection; Dartmouth (1955–56); symbol systems (Newell–Simon) against connectionism (McCulloch–Pitts, Rosenblatt, Minsky–Papert, PDP 1986, Fodor–Pylyshyn 1988); Moravec's paradox (1988) as where the strands cross.
+* Searle (1980) at one paragraph; Block's Blockhead (1981) as the case compression decides.
+* What the dispute lacked: a measure of how much structure is in data, independent of a test.
 
-Turing's "Computing Machinery and Intelligence" (1950) opens by setting aside "Can machines think?" as too meaningless to discuss and substitutes the imitation game. Two things in it matter here.
+**Brains and perception.**
 
-1. **The test is behavioural.** It judges a system by what it does in an exchange, not by any internal description. That's closer to _action_ than to compression, and action is the piece the working claim leaves out.
-2. **The paper's last section is about learning.** Turing proposes building a "child machine" and educating it rather than programming an adult mind. Grant's third claim, that learning fast is intelligence, sits at the end of the founding paper of AI.
+* Behaviourism's refusal of inner models (Watson 1913); Tolman's cognitive maps (1948) as the detour test, with the replication caveat.
+* Gestalt _Prägnanz_ (Wertheimer 1923) and Hochberg–McAlister's minimum principle (1953): economy on the brain side.
+* Craik's _The Nature of Explanation_ (1943): small-scale models for trying out actions.
+* Helmholtz's inference against **Gibson's direct perception** (1966, 1979): invariants and affordances.
+* Marr (1982) in a line: compression as a computational-level claim.
+* What the dispute lacked: a way to quantify "redundancy in the input" and "a model's fit."
 
-## What the intuition contains
+## 3. The formalization — two lines that meet at description length
 
-| Root                     | Idea                                                 | Becomes                                   |
-| ------------------------ | ---------------------------------------------------- | ----------------------------------------- |
-| Aristotle, _anchinoia_   | intelligence as the speed of finding the explanation | Grant's claim 3; the opening bet's "rate" |
-| Mach, economy of thought | understanding as a shorter description               | Grant's claim 2; MDL                      |
-| Mach bands, Helmholtz    | perception as prediction of hidden causes            | Grant's claim 1; predictive processing    |
-| Spearman, Binet          | one measure, or many?                                | the working claim's "one measure for all" |
-| Turing                   | judge by behaviour; build a learner                  | the action gap; learning as central       |
+_Split 3a (brains) / 3b (machines)._
 
-So the working claim, "intelligence is compression, one measure for all," takes Mach's economy and Spearman's single number and drops the other three roots: Aristotle's speed, Helmholtz's hidden causes and Turing's behaviour. My expectation is that the genealogy will put them back.
+**3a. The brain as compressor.** _(written 2026-11-20; addendum on free energy 2026-11-21)_
 
-**Positions taken in this stage**
+* **Attneave** (1954): Shannon's guessing game run on pictures; information concentrated at contours and corners; the 38-point cat.
+* **Barlow** (1961): redundancy reduction; his 2001 revision ("redundancy exploitation").
+* **Srinivasan, Laughlin and Dubs** (1982): predictive coding in the fly retina; surround widens as noise grows. _residual.py_ on a synthetic 4,096-pixel line: bright 5.98 → 2.48 bits/pixel, dim 7.41 → 5.24; best predictor width 2 → 8 pixels as σ goes 0.5 → 16; centre-surround nonzero at 0.7% of pixels; Mach-band caveat (bands absent at step edges).
+* **Olshausen–Field** (1996): sparse coding's objective as a two-part code length; V1-like filters.
+* **Rao–Ballard** (1999): hierarchical predictive coding; end-stopping explained.
+* **Variational free energy as code length**, stated (Hinton–van Camp 1993; Hinton–Zemel 1994; Helmholtz machine 1995): F = −log p(data) + KL(q‖posterior); **Friston** (2005, 2010), perception half only, operationally. Addendum: shadow-or-puddle, _freeenergy.py_; now _free-energy-in-plain-terms.md_. Bits-back working to _predictive-coding-and-free-energy.md_.
 
-* The first definition of intelligence was a rate (_anchinoia_), not a level (_nous_).
-* Mach's measure was right and his bookkeeping wrong: atoms cost bits once and saved far more. A model of what's really going on is what a short description becomes when the data are rich.
-* Predictive coding is Helmholtz's inference scored by Mach's measure.
-* _g_ is a compression of a correlation table, so whether it is a single thing in the head is a further question.
-* Turing's founding paper puts behaviour and learning at the centre, not stored knowledge.
+**3b. The machine as compressor.** _(written 2026-11-21)_
 
-**Steering for stage 2.** I plan two strands of equal length:
+* Solomonoff linked, not redone.
+* **Hernández-Orallo** (1998): C-tests; _ctest.py_ (items graded by Kt in a four-constructor language; unquestionable items 18.8% at 3 letters shown, 99.2% at 4; three outside solvers fall to zero above Kt ≈ 22–28 while the test-maker's language scores 100% by construction). **Sanghi–Dowe** (2003): a small program at human-average on IQ sequence items.
+* **Mahoney** (1999) and the **Hutter Prize** (2006; 2020 rules: < 10 GB RAM, < 50 h, one core); Gwern's 2026 critique (wrong side of the scaling laws).
+* **AIXI** (Hutter 2000, 2005), Leike–Hutter's bad priors (2015), and **Legg–Hutter universal intelligence** (2007) worked on three environments in small numbers; full toy in _universal-intelligence-and-aixi.md_.
+* **Chollet** (2019), full section: skill vs. intelligence; the definition (efficiency against priors, experience, generalization difficulty) in plain terms; Core Knowledge priors; ARC; the 2024 ARC Prize and test-time training (details checked in stage 5); Chollet's measure as Hutter's accounting plus prequential accounting.
 
-* **Machines and tests:** Spearman against Thomson and Thurstone, Boring's "what the tests test," Turing, Dartmouth, symbols against neural networks, and Searle in a paragraph.
-* **Brains:** Helmholtz against Gibson's direct perception, with Craik's "small-scale models" (1943) as the bridge.
+## 4. The abstraction — compression plus what?
 
-Both end on what the dispute lacked: a measure of structure that doesn't depend on any particular test. Would you rather put more weight on one strand? And should Searle stay at a paragraph or be dropped?
+_Probably split 4a / 4b._
+
+* **The reference machine**, now for brains: evolution as the supplier of the prior.
+* **Time and resources**: Levin's Kt, the speed prior, Bennett's logical depth; the metabolic cost of a spike (Laughlin et al. 1998).
+* **Prequential length as learning speed**: Grant's claims 2 and 3 as one; _prequential.py_.
+* **Action**: AIXI's reward; active inference (expected free energy, operationally); Schmidhuber's compression progress.
+* Candidate endpoint form: intelligence as a rate, not a level.
+
+## 5. The payoff — does the definition unify?
+
+_Before writing: search 2025–26 on each thread; report what changed the argument; flag anything recent and untested._
+
+* Compression and capability in LLMs (Huang 2024, Xuyang 2025, cited); newer results.
+* Test-time training and ARC-AGI-2/3 (2025–26); check the 2024 figures quoted in 3b.
+* Hutter Prize records since fx2-cmix.
+* Brains and LLMs: Schrimpf et al. (2021), Caucheteux–Gramfort–King (2023); newer work.
+* Empirical tests of predictive coding in cortex (2024–26); where the free-energy principle stands, operationally.
+* Grant's test answered: is compression to intelligence what energy was to _vis viva_?
+
+***
+
+## Side files (settled 2026-11-19: three; fourth added 2026-11-21)
+
+* **Free energy in plain terms** — _free-energy-in-plain-terms.md_. **Written 2026-11-21.** The shadow-or-puddle example in bits; F = surprise + error of the guess; perception, learning, action; precision-weighted prediction errors; the name.
+* **Predictive coding and the free-energy principle in plain terms** — _predictive-coding-and-free-energy.md_. Residual coding → Rao–Ballard → bits-back working; cites the free-energy side file rather than repeating it; operational only.
+* **Universal intelligence and AIXI** — _universal-intelligence-and-aixi.md_. Legg–Hutter worked on toy environments; links the Solomonoff side file.
+* **Measuring intelligence: g and factor analysis** — _measuring-intelligence.md_. Spearman's two-factor model on a 3 × 3 correlation matrix, Thomson's bonds, mutualism, what _g_ is and isn't. No group differences.
+
+## Scripts (pure Python, no libraries; kept in GitHub)
+
+* _residual.py_ (written, stage 3a).
+* _freeenergy.py_ (written, 3a addendum): shadow or puddle; F against the guess; Gaussian energies.
+* _ctest.py_ (written, stage 3b): item bank, unquestionability by letters shown, four solvers by difficulty band.
+* _prequential.py_ (or _compress.py_ extended): static model vs. on-the-fly adaptation from a shared pseudo-random start.
+* _factor.py_: Spearman's _g_ from a small correlation matrix; Thomson's bonds and mutualism simulated.
+* _aixi_toy.py_: universal intelligence over three tiny environments.
+* Reused: _compress.py_, _shannon_game.py_, _solomonoff.py_, _taxi.py_.
+
+## Threads to carry in
+
+* **The bias** — evolution as the supplier of a brain's prior; the C-test's reference language; Chollet's Core Knowledge as a declared prior.
+* **Prediction underdetermines mechanism** — Moravec; Thomson's bonds; equal compression from different mechanisms.
+* **Observation bounded by computation** — Kt, logical depth; the Hutter Prize's resource limits.
+* **The record** and **the copy** — memorization vs. compression; Blockhead as pure copy.
+* **The division** — Markov blankets as the free-energy principle's cut between agent and world.
+* **Causality** — action and intervention (stage 4), handed back; Tolman's detour.
+
+## Guardrails
+
+* Shape first; worked examples with small numbers; runnable scripts where they help.
+* No second pass on Solomonoff, arithmetic coding, MDL, grokking, or the identity: link and build.
+* Consciousness capped at a paragraph; psychometrics limited to _g_ as a construct; no group differences.
+* The free-energy principle in operational terms only.
+* Claude is an instance of the systems studied; its sense of how it works is not evidence.

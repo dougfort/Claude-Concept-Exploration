@@ -1,132 +1,181 @@
-**On side files:** both. A few candidates can be named now, and the rest are better caught as they come up.
+# What Is Intelligence? — Outline
 
-* **Name now:** interests that span several explorations. The method writes these at the close, so knowing early lets me feed them as we go. I see two:
+_Working plan for the thirteenth exploration, November 2026. Prompted by 3Blue1Brown, "This algorithm changed how I think about compression" (Information theory, part 3, 17 November 2026), chapter 6, "Reflections on 'Compression is Intelligence'" (transcript supplied by Fog). Drafted 2026-11-19; arc settled before stage 1._
 
-  * **Reconstructions of quantum theory.** This gathers Gleason (_Randomness_), Bell and Tsirelson's 2√2, Popescu–Rohrlich boxes, and the information-theoretic axioms, and it is where your stage 5 interest lands.
-  * **Error-correcting codes, classical to quantum.** This runs from Hamming to polar codes to the three-qutrit code from _Space_ and today's surface codes. It's the most programmer-shaped topic in the arc.
+**Steering (2026-11-19, before drafting):** a full genealogy, not an extension of _compression-is-prediction.md_; the brain as predictive compressor at **equal weight** with machines throughout, not one stage.
 
-* **As they come up:** overflow detours, meaning a stage that pulls past its cap. The two likely ones are the philosophy of meaning (stage 2) and a quantum-information primer (4b). When one starts to pull, I'll say so and you decide.
+**Steering (2026-11-19, before stage 1):** selective prehistory in stage 1; **all three side files** (predictive coding and the free-energy principle; universal intelligence and AIXI; measuring intelligence: _g_ and factor analysis); psychometrics limited to what _g_ is as a construct, group-difference debates out of scope entirely; the free-energy principle stated **in operational terms only**, no philosophical debate.
 
-If either of the first two sounds like something you'd read, say so now. Otherwise I'll ask at the close.
+**Steering (2026-11-20, after stage 1):** stage 2 as two strands of equal length (machines and tests; brains and perception); Searle kept at one paragraph.
 
-I've recorded your steering in the outline, along with these changes:
+**Steering (2026-11-20, after stage 2):** stage 3 split 3a (brains) / 3b (machines); _residual.py_ run on a **synthetic line** with edges, ramps and noise (no real image); the Hinton–van Camp bits-back argument **stated** in 3a, with the working left to _predictive-coding-and-free-energy.md_.
 
-* Stage 4 is split now. 4a covers aboutness as correlation and copying; 4b covers the five quantum results.
-* Stage 5 is weighted toward your question and split. 5a asks whether quantum theory comes from information: Clifton–Bub–Halvorson, the reconstructions, PR boxes, and information causality, each with a worked example. 5b covers conservation, records, and the bet.
+**Steering (2026-11-21, after 3a):** Fog asked for a fuller explanation of free energy before 3b; given as a stage-3a addendum (shadow-or-puddle example, _freeenergy.py_) and, at Fog's request ("this form has been very helpful"), saved as a **fourth side file**, _free-energy-in-plain-terms.md_. For 3b: build a small **C-test** in pure Python (_ctest.py_); give **Chollet a full section**.
 
-***
-
-# Stage 1 — The intuition: form, sign, message
-
-_A selective prehistory. The telegraph lineage from Nyquist to Hartley is in_ shannon-and-information.md _§1 and isn't repeated._
-
-## The word: from shaping to telling
-
-_Informare_ meant to give form to something, to shape it. It came to mean shaping a mind as well. Cicero used _informatio_ for an outline of a thing held in the mind before you meet it.
-
-The philosophical root is Aristotle, _De Anima_ II.12. Perception is the reception of a thing's form without its matter, as wax takes the impression of a signet ring without taking the gold. The scholastics built their theory of knowledge on this: to know a thing is for the intellect to be "informed" by its form. By Chaucer's time, English "information" meant something told.
-
-_Position:_ the signet ring is the first statement of carrier-independence, and it already contains the limit of that idea. The form passes from gold to wax unchanged, which is the independence. But it needs wax: a medium that can hold the impression. Bacon will make that condition explicit, and quantum mechanics will eventually make it the whole story. **Carrier-independence has always meant independence of which carrier, given a carrier capable of the distinctions.**
-
-## The sign: natural and given
-
-Augustine (_De doctrina christiana_ II) defined a sign as a thing that, beyond the impression it makes on the senses, brings something else to mind. He split signs into two kinds:
-
-* **Natural signs** signify without anyone intending them: smoke for fire, a footprint for an animal.
-* **Given signs** are signs by convention: words, flags.
-
-The Stoics had already separated three things: the sound, what is said, and the thing it is about.
-
-_Position:_ the natural sign is the version physics keeps. Smoke is "about" fire only because the two are reliably correlated. In stage 4, all aboutness becomes this kind: mutual information between two systems. Given signs survive as a special case, correlations that someone set up deliberately.
-
-## Messages at a distance: what the channel carries
-
-**The beacon.** In Aeschylus's _Agamemnon_ (458 BC), a chain of fires carries the fall of Troy to Argos in one night. Every fire carries the same single bit: lit or unlit. The meaning, "Troy has fallen," lives entirely in the prior agreement. The channel selects one of two messages agreed in advance.
-
-**The alphabet.** Polybius (_Histories_ X) criticized an earlier water-clock system of Aeneas Tacticus. It could send only messages on a pre-agreed list, and the urgent ones are exactly those nobody anticipated. His fix was to put the alphabet in a 5×5 grid and send each letter with torches: some on the left for the row, some on the right for the column.
-
-Worked: 5 × 5 = 25 cells hold the 24 Greek letters. Each torch signal selects one of 25 options, about log₂ 25 ≈ 4.6 bits. Any sentence becomes a string of such selections.
-
-_Position:_ **Polybius made the decisive pre-modern move, more decisive than Bacon's.** He moved the codebook from messages to symbols. Before him, a channel carried a choice from a list of meanings. After him, it carried a choice from all strings, so it could carry the unanticipated. Hartley's later "eliminate psychological factors" is this move made into a definition.
-
-## The codebreaker: statistics without content
-
-Al-Kindi, a 9th-century Baghdad polymath, wrote a treatise on deciphering encrypted messages; the manuscript was rediscovered in Istanbul in the 1980s. It contains the first known description of frequency analysis: count the letters in the ciphertext, compare them with the counts in ordinary text in the same language, and match.
-
-Worked, with a Caesar shift (every letter moved forward a fixed number of places):
-
-* Ciphertext: `PHHW PH KHUH DW VHYHQ`
-* Counts: H appears 7 times out of 17 letters; nothing else appears more than twice.
-* E is the most common letter in English. H − E = 3, so guess a shift of 3.
-* Shift back by 3: `MEET ME HERE AT SEVEN`.
-
-In computational terms, a substitution cipher is a relabeling of symbols, and relabeling doesn't change the histogram's shape. `sorted(Counter(text).values())` is the same for the plaintext and the ciphertext. The cipher hides which symbol is which. It cannot hide the distribution.
-
-_Position:_ al-Kindi is where the intuition's two halves first come apart in practice. The codebreaker reads the message's statistics, its measure, before knowing any of its content. Carrier-independence is the very property that makes the attack work: if a relabeled message carries the same information, it also carries the same statistics. Shannon's 1949 secrecy theory starts here, eleven centuries later (_shannon-and-information.md_ §2).
-
-## The bit, stated: Bacon's biliteral cipher
-
-Francis Bacon (_De Augmentis Scientiarum_, 1623, describing an idea from his youth in Paris) encoded each letter as five choices between two symbols, _a_ and _b_.
-
-Worked:
-
-* 2⁴ = 16 is too few for a 24-letter alphabet, and 2⁵ = 32 is enough. So: five binary choices per letter.
-* In Bacon's table, A = aaaaa, B = aaaab, and so on: the letter's position in the alphabet written in binary, with _a_ = 0 and _b_ = 1. H is position 7, binary 00111, so _aabbb_. I is 8, binary 01000, so _abaaa_. In code: `format(i, '05b')`.
-* To hide "HI", set any innocent ten-letter text in two slightly different typefaces, roman for _a_ and italic for _b_. The secret rides on a distinction the reader isn't looking at.
-
-Bacon stated the general principle himself: anything capable of a twofold difference will do. Bells, trumpets, lights, and cannon shots all qualify.
-
-This is the clearest pre-modern statement of the working claim's third clause. Content is independent of the carrier, provided the carrier can make the distinctions. It also contains the first cost accounting: hiding two letters took ten letters of cover. Leibniz's binary arithmetic (1679, published 1703) supplied the arithmetic but not the communication idea.
-
-## Frequency weighting: the semaphore and Morse
-
-Chappe's optical telegraph (Paris–Lille, 1794) used semaphore arms on towers. Operators sent pairs of signals: one chose a page of a codebook, the other a line on that page. With 92 usable signals, a pair selects one of 92 × 92 = 8,464 words and phrases, about 13 bits per pair.
-
-This is Polybius and the beacon combined. The symbols form an alphabet of signals, but the codebook brings back word-level meaning to save transmissions.
-
-Morse and Vail's code (1830s–40s; Vail is usually credited with counting type in a printer's case) gave common letters short codes: E is a single dot, T a single dash, Q is dash-dash-dot-dash.
-
-Worked, with a four-letter alphabet whose letters occur with probabilities ½, ¼, ⅛, ⅛:
-
-| Letter | Probability | Fixed-length code | Weighted code |
-| ------ | ----------- | ----------------- | ------------- |
-| A      | 1/2         | 00                | 0             |
-| B      | 1/4         | 01                | 10            |
-| C      | 1/8         | 10                | 110           |
-| D      | 1/8         | 11                | 111           |
-
-* The fixed-length code averages 2 bits per letter.
-* The weighted code averages ½·1 + ¼·2 + ⅛·3 + ⅛·3 = 1.75 bits per letter.
-* 1.75 is also −Σ p log₂ p for these probabilities, the Shannon entropy. Here the weighted code reaches the limit exactly.
-
-A programmer's footnote: Morse code is not a prefix code. "E" (one dot) is the start of "I" (two dots), so Morse needs gaps between letters, and the gap is effectively a third symbol. The weighted code in the table is prefix-free: no codeword begins another, so it decodes without delimiters. Huffman (1952) made this kind of code optimal and constructible. Morse had the weighting by practice; he had neither the theory nor the prefix property.
-
-## What the intuition contains
-
-Four tenets, all held without examination by 1900:
-
-1. **Information is content.** A message says something, and that something is what counts. The beacon's meaning, the codebook's phrases, Cicero's mental outline.
-2. **It is about something.** Signs point beyond themselves, to fire, to Troy, to the enemy's plans.
-3. **Any carrier will do, given enough distinctions.** The signet ring, Polybius's torches, Bacon's "twofold difference."
-4. **Some messages are cheaper than others.** Morse's frequency weighting and al-Kindi's statistics. Practitioners exploited this constantly and no one theorized it.
-
-The first three are the working claim. The fourth is the seed that grows into the measure.
-
-**What it lacked.** First, a quantity: Morse knew E is cheap and couldn't say how cheap it could be made. Second, a clear statement of the receiver's set of alternatives. The beacon's whole content lies in the agreed list, and Polybius's advance was enlarging that list, but nobody made "the set of possible messages" the object of study.
-
-The practice also already showed tenets 1 and 4 pulling apart. Al-Kindi measured without meaning; a codebook supplies meaning without measure. Once someone tries to quantify information, those two pull fully apart, and that is stage 2.
-
-|                | What the channel carries                        | Where the meaning is                   |
-| -------------- | ----------------------------------------------- | -------------------------------------- |
-| Beacon         | one of two agreed messages                      | entirely in the prior agreement        |
-| Polybius       | one of 25 symbols, then any string              | in the language                        |
-| Al-Kindi       | statistics, readable without content            | (ignored)                              |
-| Bacon          | five binary choices per letter, in any medium   | in the language; the carrier is hidden |
-| Chappe / Morse | weighted selections from a codebook or alphabet | split between codebook and language    |
+**Steering (2026-11-21, after 3b):** stage 4 split 4a (cost) / 4b (action) as proposed. For _prequential.py_, Fog supplied a chapter of fiction, _benefit-street-chapter-07.md_ (preferred over the Portsmouth novel), as the text to adapt to.
 
 ***
 
-**Steering for stage 2 (meaning against measure).** The outline gives Fisher information real weight. It is the measure that is _about_ something (a parameter), the road Shannon didn't take. Fisher information also reappears in 5a: some reconstructions and quantum metrology lean on it.
+## 0. Carried in
 
-1. Keep Fisher at full weight, or reduce it to a contrast so more room goes to Shannon–Weaver and Bar-Hillel–Carnap?
-2. Do you want Wiener's opposite sign worked in numbers (the same coin seen as order gained versus uncertainty resolved), or stated in a paragraph?
+_Cite, don't repeat._
+
+* **The identity** (_compression-is-prediction.md_ §1–3): log loss = code length; arithmetic coding turns any predictor into a compressor; Grant's chapters 1–5 match §2–5.
+* **Prequential coding** (_compression-is-prediction.md_ §5; Blier–Ollivier 2018): send no model; the decoder refits as it decodes; the training curve is the code length.
+* **Where the identity stops** (_compression-is-prediction.md_ §7): compressible ≠ efficiently predictable; compression ≠ mechanism; prediction ≠ intervention.
+* **The bias** (_what-is-induction.md_; _solomonoff-and-the-universal-prior.md_): "short" is relative to a reference machine, up to a translation constant; every learner brings an assumption the data don't supply.
+* **World model vs. lookup** (_what-is-induction.md_ §6): a learner builds a map where the map is the shortest description of its data.
+* **Emergence** (_what-is-emergence.md_): capabilities appear through first-order transitions in training, sudden per run, smooth on average.
+
+### Grant's three claims, as stated
+
+1. Compression and prediction are equivalent (arithmetic coding one way; 2^−δ from a compressor the other), and good prediction seems to need a coherent model; predictive processing says the brain does this.
+2. Understanding is a thing getting smaller: equal prediction from a smaller model is better, and the Hutter Prize's count of the decoder makes that measurable.
+3. Learning quickly is intelligence too, and it enters the score when the model adapts on the fly (prequential coding from a shared pseudo-random start).
+
+Grant's frame: treat "compression is intelligence" as a proposed _definition_, judged like Newton's "energy" — reductive, but is it productive, does it unify? (Correction: the quantity he gives, kg·m/s², is force; energy was not Newton's. Its real history — Leibniz's _vis viva_, Young's naming in 1807, the conservation law of the 1840s — is itself a successful concept genealogy, and the better model for his test.)
+
+***
+
+## Working claim to be broken
+
+**Intelligence is compression: a system is intelligent to the degree that it finds short descriptions of its experience, and one measure ranks brains and machines alike.**
+
+Expected breaks:
+
+1. **"Short" has no owner-free meaning.** Short in whose language? (Carried in from _Induction_: the reference machine, grue, the invariance constant.) A brain's language is fixed by evolution and a metabolic budget; a transformer's by architecture and gradient descent.
+2. **Compression scores passive observation; intelligence acts.** A compressor can't choose what to look at next. AIXI must add reward; the free-energy principle must add expected free energy. Whether action can be folded into prediction is the central test for the brain half.
+3. **Compression ignores cost.** Kolmogorov complexity is free to compute forever; brains and machines are not. Levin's Kt, the speed prior, logical depth, and the energy cost of a spike all reintroduce time and energy, and the measure changes when they do.
+4. **"One measure for all" may fail.** Spearman's _g_ is a statistical construct across humans; Moravec's paradox says the ranking of tasks inverts between humans and machines.
+
+## Opening bet, to be tested, not a result
+
+**Intelligence is not compression but the efficiency of compressing new data: how quickly a system's prequential code length drops on experience it hasn't seen, per sample and per unit of resource, in service of acting.**
+
+Predictions:
+
+* Grant's claims 2 and 3 collapse into one: in a prequential code a big model is not penalized for its size but for how slowly it learns, so "smaller" is a proxy for "learns faster" (Blier–Ollivier's finding, applied to his framing; not new).
+* The brain half confirms efficient and predictive coding at the sensory periphery (retina, early vision) and is much weaker as a total theory of cortex; the 2025–26 search decides how weak.
+* Action breaks pure compression in both halves, and the repairs (AIXI's reward, active inference's expected free energy, Schmidhuber's compression progress) each smuggle in a goal or a prior.
+* Chollet's "skill-acquisition efficiency" and Grant's on-the-fly fine-tuning are the same proposal; test-time training on ARC is its experiment.
+
+***
+
+## 1. The intuition — quick wit and economy of thought _(written 2026-11-19)_
+
+_Selective prehistory._
+
+* **Aristotle**: _anchinoia_, "quick wit," hitting on the middle term in an imperceptible time (_Posterior Analytics_ I.34), with his own example of the moon's bright side: intelligence as speed of finding the explanation.
+* **Hobbes** and **Leibniz** in a line; link _what-is-computation.md_ §1.
+* **Mach**: Mach bands (1865) and the economy of thought (1882 lecture; _Die Mechanik_, 1883), with his refraction example (a table of angles against Snell's law); his use of economy against atoms.
+* **Helmholtz's unconscious inference** (_Physiological Optics_, vol. 3, 1867): perception as inference from signs to causes; the pressed-eyeball phosphene.
+* **Spearman's _g_** (1904) against **Binet's** refusal of a single quantity (1905): in a paragraph; the side file carries the rest.
+* **Turing** (1950): replace the definition with a test; the "child machine" as learning.
+* Working example to carry: one line of a photograph, raw (64 bits) against residual coding (41 bits).
+
+## 2. The dispute — what is being measured, and is it inside? _(written 2026-11-20)_
+
+_Two strands at equal length._
+
+**Machines and tests.**
+
+* _g_ real or artefact: Spearman against Thomson's bonds (1916), worked on six bonds; Thurstone's primary abilities (1938); van der Maas's mutualism (2006) as a third mechanism for the same table. Boring (1923): "intelligence is what the tests test." Construct only; side file _measuring-intelligence.md_ carries the factor analysis.
+* Turing's behaviourism and Lady Lovelace's objection; Dartmouth (1955–56); symbol systems (Newell–Simon) against connectionism (McCulloch–Pitts, Rosenblatt, Minsky–Papert, PDP 1986, Fodor–Pylyshyn 1988); Moravec's paradox (1988) as where the strands cross.
+* Searle (1980) at one paragraph; Block's Blockhead (1981) as the case compression decides.
+* What the dispute lacked: a measure of how much structure is in data, independent of a test.
+
+**Brains and perception.**
+
+* Behaviourism's refusal of inner models (Watson 1913); Tolman's cognitive maps (1948) as the detour test, with the replication caveat.
+* Gestalt _Prägnanz_ (Wertheimer 1923) and Hochberg–McAlister's minimum principle (1953): economy on the brain side.
+* Craik's _The Nature of Explanation_ (1943): small-scale models for trying out actions.
+* Helmholtz's inference against **Gibson's direct perception** (1966, 1979): invariants and affordances.
+* Marr (1982) in a line: compression as a computational-level claim.
+* What the dispute lacked: a way to quantify "redundancy in the input" and "a model's fit."
+
+## 3. The formalization — two lines that meet at description length
+
+_Split 3a (brains) / 3b (machines)._
+
+**3a. The brain as compressor.** _(written 2026-11-20; addendum on free energy 2026-11-21)_
+
+* **Attneave** (1954): Shannon's guessing game run on pictures; information concentrated at contours and corners; the 38-point cat.
+* **Barlow** (1961): redundancy reduction; his 2001 revision ("redundancy exploitation").
+* **Srinivasan, Laughlin and Dubs** (1982): predictive coding in the fly retina; surround widens as noise grows. _residual.py_ on a synthetic 4,096-pixel line: bright 5.98 → 2.48 bits/pixel, dim 7.41 → 5.24; best predictor width 2 → 8 pixels as σ goes 0.5 → 16; centre-surround nonzero at 0.7% of pixels; Mach-band caveat (bands absent at step edges).
+* **Olshausen–Field** (1996): sparse coding's objective as a two-part code length; V1-like filters.
+* **Rao–Ballard** (1999): hierarchical predictive coding; end-stopping explained.
+* **Variational free energy as code length**, stated (Hinton–van Camp 1993; Hinton–Zemel 1994; Helmholtz machine 1995): F = −log p(data) + KL(q‖posterior); **Friston** (2005, 2010), perception half only, operationally. Addendum: shadow-or-puddle, _freeenergy.py_; now _free-energy-in-plain-terms.md_. Bits-back working to _predictive-coding-and-free-energy.md_.
+
+**3b. The machine as compressor.** _(written 2026-11-21)_
+
+* Solomonoff linked, not redone.
+* **Hernández-Orallo** (1998): C-tests; _ctest.py_ (items graded by Kt in a four-constructor language; unquestionable items 18.8% at 3 letters shown, 99.2% at 4; three outside solvers fall to zero above Kt ≈ 22–28 while the test-maker's language scores 100% by construction). **Sanghi–Dowe** (2003): a small program at human-average on IQ sequence items.
+* **Mahoney** (1999) and the **Hutter Prize** (2006; 2020 rules: < 10 GB RAM, < 50 h, one core); Gwern's 2026 critique (wrong side of the scaling laws).
+* **AIXI** (Hutter 2000, 2005), Leike–Hutter's bad priors (2015), and **Legg–Hutter universal intelligence** (2007) worked on three environments in small numbers; full toy in _universal-intelligence-and-aixi.md_.
+* **Chollet** (2019), full section: skill vs. intelligence; the definition (efficiency against priors, experience, generalization difficulty) in plain terms; Core Knowledge priors; ARC; the 2024 ARC Prize and test-time training (details checked in stage 5); Chollet's measure as Hutter's accounting plus prequential accounting.
+
+## 4. The abstraction — compression plus what?
+
+_Split 4a (cost) / 4b (action)._
+
+**4a. Compression plus cost.** _(written 2026-11-21)_
+
+* **Time**: Levin's Kt (1973) worked on two programs; Levin search; Schmidhuber's speed prior (2002).
+* **Depth**: Bennett's logical depth (1988); short-and-deep vs. long-and-shallow; chess chunks (Simon–Gilmartin 1973); expertise as caching. Position: Grant's "smaller is smarter" holds when time is free and inverts under time pressure.
+* **Energy**: Laughlin et al. (1998): \~10⁴ ATP per bit at a synapse, 10⁶–10⁷ for graded or spike signals; brain \~20% of resting energy; cost per bit rising with rate (Niven et al. 2007); sparse coding as energy efficiency.
+* **Evolution as the prior**: the genome (\~6 × 10⁹ bits) vs. 10¹⁴–10¹⁵ synapses (Zador 2019, genomic bottleneck); the data gap (Frank 2023; 2026 preprint on children's accelerating returns, flagged).
+* _**prequential.py**_ on _benefit-street-chapter-07.md_ (21,377 bytes), base text 200 KB of stdlib docstrings: scratch 2.986 bits/byte; pretrained static 4.973; pretrained adapting 3.106; pretrained fast (4×) 3.038; light prior (1/20 weight) 2.507; lzma 2.985. Hutter accounting adds 64,292 bytes for the model. Positions: wrong priors held strongly hurt; priors help when held lightly; learning rate shows in the code length; the two accountings disagree on which learner is best.
+
+**4b. Compression plus action.**
+
+* AIXI's reward; active inference (expected free energy, operationally); Schmidhuber's compression progress (1991, 2009) and the noisy-TV problem.
+* Candidate endpoint form: intelligence as a rate, not a level.
+
+## 5. The payoff — does the definition unify?
+
+_Before writing: search 2025–26 on each thread; report what changed the argument; flag anything recent and untested._
+
+* Compression and capability in LLMs (Huang 2024, Xuyang 2025, cited); newer results.
+* Test-time training and ARC-AGI-2/3 (2025–26); check the 2024 figures quoted in 3b.
+* Hutter Prize records since fx2-cmix.
+* Brains and LLMs: Schrimpf et al. (2021), Caucheteux–Gramfort–King (2023); newer work.
+* Children's learning curves vs. LMs (Frank 2026 preprint; Feng–Tan–Frank 2026 "Baby Scale").
+* Empirical tests of predictive coding in cortex (2024–26); where the free-energy principle stands, operationally.
+* Grant's test answered: is compression to intelligence what energy was to _vis viva_?
+
+***
+
+## Side files (settled 2026-11-19: three; fourth added 2026-11-21)
+
+* **Free energy in plain terms** — _free-energy-in-plain-terms.md_. **Written 2026-11-21.**
+* **Predictive coding and the free-energy principle in plain terms** — _predictive-coding-and-free-energy.md_. Residual coding → Rao–Ballard → bits-back working; cites the free-energy side file rather than repeating it; operational only.
+* **Universal intelligence and AIXI** — _universal-intelligence-and-aixi.md_. Legg–Hutter worked on toy environments; links the Solomonoff side file.
+* **Measuring intelligence: g and factor analysis** — _measuring-intelligence.md_. Spearman's two-factor model on a 3 × 3 correlation matrix, Thomson's bonds, mutualism, what _g_ is and isn't. No group differences.
+
+## Scripts (pure Python, no libraries; kept in GitHub)
+
+* _residual.py_ (written, stage 3a).
+* _freeenergy.py_ (written, 3a addendum).
+* _ctest.py_ (written, stage 3b).
+* _prequential.py_ (written, stage 4a): order-0–4 context model; five conditions on a supplied text; Hutter accounting; learning curves by 2,000-byte block.
+* _factor.py_: Spearman's _g_ from a small correlation matrix; Thomson's bonds and mutualism simulated.
+* _aixi_toy.py_: universal intelligence over three tiny environments.
+* Candidate for 4b: _curiosity.py_ (compression progress vs. prediction error on three streams; an active-inference choice to look closer).
+* Reused: _compress.py_, _shannon_game.py_, _solomonoff.py_, _taxi.py_.
+
+## Threads to carry in
+
+* **The bias** — evolution as the supplier of a brain's prior; the C-test's reference language; Chollet's Core Knowledge as a declared prior; _prequential.py_'s strong vs. light prior.
+* **Prediction underdetermines mechanism** — Moravec; Thomson's bonds; equal compression from different mechanisms.
+* **Observation bounded by computation** — Kt, logical depth; the Hutter Prize's resource limits.
+* **The record** and **the copy** — memorization vs. compression; Blockhead as pure copy; expertise as caching.
+* **The division** — Markov blankets as the free-energy principle's cut between agent and world.
+* **Causality** — action and intervention (stage 4b), handed back; Tolman's detour.
+
+## Guardrails
+
+* Shape first; worked examples with small numbers; runnable scripts where they help.
+* No second pass on Solomonoff, arithmetic coding, MDL, grokking, or the identity: link and build.
+* Consciousness capped at a paragraph; psychometrics limited to _g_ as a construct; no group differences.
+* The free-energy principle in operational terms only.
+* Claude is an instance of the systems studied; its sense of how it works is not evidence.
